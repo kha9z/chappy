@@ -1,16 +1,11 @@
 {
-  "name": "packages",
+  "name": "@chappy/shared",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "private": true,
+  "type": "module",
+  "main": "./src/schema.ts",
+  "types": "./src/schema.ts",
   "dependencies": {
-    "zod": "^4.6.7"
+    "zod": "^4.0.0"
   }
 }
