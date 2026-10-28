@@ -1,6 +1,7 @@
 import { Router } from 'express'
-import { GetCommand, ScanCommand } from '@aws-sdk/lib-dynamodb'
+import { GetCommand, ScanCommand, PutCommand } from '@aws-sdk/lib-dynamodb'
 import { db, tableName } from '../db/dynamodb.js'
+import { createChannelSchema } from '@chappy/shared'
 
 const router = Router()
 
@@ -16,7 +17,9 @@ try {
     })
     const result = await db.send(command)
     res.json(result.Items ?? [])
+
 } catch (error) {
+
     console.error(error)
     res.status(500).json({
         error: 'Could not fetch channels'
@@ -42,9 +45,62 @@ router.get('/:id', async (req, res) => {
             return
         }
         res.json(result.Item)
+
     } catch (error) {
+
         console.error(error)
         res.status(500).json({ error: 'could not fetch channel' })
+    }
+})
+
+router.post('/', async (req, res) => {
+    try {
+        const validation = createChannelSchema.safeParse(req.body)
+
+        if (!validation.success) {
+            res.status(400).json({
+                error: 'invalid channel data',
+                details: validation.error.flatten()
+            })
+            return
+        }
+
+        const { id, name, description, isLocked} = validation.data
+
+        const channel = {
+            PK: `CHANNEL#${id}`,
+            SK: 'META',
+            name,
+            description,
+            isLocked,
+            createdBy: 'system',
+            createdAt: new Date().toISOString()
+        }
+
+        const command = new PutCommand({
+            TableName: tableName,
+            Item: channel,
+            ConditionExpression: 'attribute_not_exists(PK)'
+        })
+        await db.send(command)
+        res.status(201).json(channel)
+
+    } catch (error) {
+
+        if (
+            error instanceof Error &&
+            error.name === 'ConditionalCheckFailedException'
+        ) {
+            res.status(409).json({
+                error: 'channel already exists'
+            })
+            return
+
+        }
+        console.error(error)
+        res.status(500).json({
+            error: 'could not create channel'
+        })
     }
 })
 
