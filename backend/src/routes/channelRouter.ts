@@ -65,7 +65,7 @@ router.post('/', async (req, res) => {
             return
         }
 
-        const { id, name, description, isLocked} = validation.data
+        const { id, name, description, isLocked } = validation.data
 
         const channel = {
             PK: `CHANNEL#${id}`,
