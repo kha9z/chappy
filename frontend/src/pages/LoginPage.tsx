@@ -15,12 +15,11 @@ export default function LoginPage() {
                 <div className="login-window">
                     <div className="window-titlebar">
                         <span>Chappy - Login</span>
-                        <span>X</span>
                     </div>
 
                     <div className="window-content">
                         <h1>Welcome to Chappy!</h1>
-                        <p>Enter your details to start chatting.</p>
+                        <p>Sign in to start chatting.</p>
 
                         <form className="login-form">
                             <label htmlFor="username">Username</label>
