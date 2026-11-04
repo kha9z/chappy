@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import { PutCommand } from '@aws-sdk/lib-dynamodb'
+import { PutCommand, GetCommand } from '@aws-sdk/lib-dynamodb'
 import bcrypt from 'bcrypt'
 import { randomUUID } from 'node:crypto'
-import { registerUserSchema } from '@chappy/shared'
+import { registerUserSchema, loginUserSchema } from '@chappy/shared'
 import { db, tableName } from '../db/dynamodb.js'
+import jwt from 'jsonwebtoken'
 
 const router = Router()
 
@@ -52,7 +53,7 @@ router.post('/register', async (req, res) => {
             error instanceof Error &&
             error.name === 'ConditionalCheckFailedException'
         ) {
-            res.status(409).json ({
+            res.status(409).json({
                 error: 'Username already exists'
             })
             return
@@ -60,6 +61,81 @@ router.post('/register', async (req, res) => {
         console.log(error)
         res.status(500).json({
             error: 'could not register user'
+        })
+    }
+})
+
+router.post('/login', async (req, res) => {
+    try {
+        const validation = loginUserSchema.safeParse(req.body)
+
+        if (!validation.success) {
+            res.status(400).json({
+                error: 'Invalid login data',
+                details: validation.error.issues
+            })
+            return
+        }
+
+        const { username, password } = validation.data
+        const normalizedUsername = username.toLowerCase()
+
+        const command = new GetCommand({
+            TableName: tableName,
+            Key: {
+                PK: `USER#${normalizedUsername}`,
+                SK: 'PROFILE'
+            }
+        })
+
+        const result = await db.send(command)
+        if (!result.Item) {
+            res.status(401).json({
+                error: 'Invalid username or password'
+            })
+            return
+        }
+
+        const passwordMatches = await bcrypt.compare(
+            password,
+            result.Item.passwordHash
+        )
+
+        if (!passwordMatches) {
+            res.status(401).json({
+                error: 'Invalid username or password'
+            })
+            return
+        }
+
+        const jwtSecret = process.env.JWT_SECRET
+        if (!jwtSecret) {
+            throw new Error('JWT_SECRET is not configured')
+        }
+
+        const token = jwt.sign(
+            { username: result.Item.username },
+            jwtSecret,
+            {
+                subject: result.Item.id,
+                expiresIn: '1h'
+            }
+        )
+
+        res.status(200).json({
+            message: 'Login successful',
+            token,
+            user: {
+                id: result.Item.id,
+                username: result.Item.username
+            }
+        })
+
+    } catch (error) {
+        console.error(error)
+
+        res.status(500).json({
+            error: 'Could not log in'
         })
     }
 })

@@ -19,4 +19,11 @@ export const registerUserSchema = z.object({
         .min(5, 'Password must be atleast 5 characters')
         .max(128, 'Password is too long')
 })                  
+
+export const loginUserSchema = z.object({
+    username: z.string().trim().min(1),
+    password: z.string().min(1)
+})
+
 export type RegisterUser = z.infer<typeof registerUserSchema>
+export type LoginUser = z.infer<typeof loginUserSchema>
