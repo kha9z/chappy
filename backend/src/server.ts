@@ -1,9 +1,17 @@
 import express from 'express'
+import cors from 'cors'
 import channelRouter from './routes/channelRouter.js'
 import userRouter from './routes/userRouter.js'
 
 const app = express()
 const PORT = Number(process.env.PORT) || 6767
+
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'https://chappy-1-fqew.onrender.com'
+    ]
+}))
 
 app.use(express.json())
 
