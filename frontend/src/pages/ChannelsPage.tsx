@@ -14,8 +14,8 @@ export default function ChannelsPage() {
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     
-    const token = sessionStorage.getItem('chappy_token')
-    const username = sessionStorage.getItem('chappy_username')
+    const token = localStorage.getItem('chappy_token')
+    const username = localStorage.getItem('chappy_username')
     
     useEffect(() => {
         async function fetchChannels() {

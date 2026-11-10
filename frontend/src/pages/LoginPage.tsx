@@ -41,8 +41,8 @@ export default function LoginPage() {
 
             const data: LoginResponse = await response.json()
 
-            sessionStorage.setItem('chappy_token', data.token)
-            sessionStorage.setItem('chappy_username', data.user.username)
+            localStorage.setItem('chappy_token', data.token)
+            localStorage.setItem('chappy_username', data.user.username)
 
             navigate('/channels', { replace: true })
 
@@ -55,8 +55,8 @@ export default function LoginPage() {
         }
     }
     function handleGuestLogin() {
-        sessionStorage.removeItem('chappy_token')
-        sessionStorage.removeItem('chappy_username')
+        localStorage.removeItem('chappy_token')
+        localStorage.removeItem('chappy_username')
         navigate('/channels')
     }
 

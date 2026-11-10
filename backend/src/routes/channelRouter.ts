@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { GetCommand, ScanCommand, PutCommand } from '@aws-sdk/lib-dynamodb'
 import { db, tableName } from '../db/dynamodb.js'
 import { createChannelSchema } from '@chappy/shared'
+import { z } from 'zod'
 
 const router = Router()
 
@@ -42,7 +43,7 @@ router.get('/:id', async (req, res) => {
 
         if (!result.Item) {
             res.status(404).json({ error: 'Channel not found' })
-            return
+            return  
         }
         res.json(result.Item)
 
@@ -60,7 +61,7 @@ router.post('/', async (req, res) => {
         if (!validation.success) {
             res.status(400).json({
                 error: 'invalid channel data',
-                details: validation.error.flatten()
+                details: z.treeifyError(validation.error)
             })
             return
         }
@@ -92,14 +93,14 @@ router.post('/', async (req, res) => {
             error.name === 'ConditionalCheckFailedException'
         ) {
             res.status(409).json({
-                error: 'channel already exists'
+                error: 'Channel already exists'
             })
             return
 
         }
         console.error(error)
         res.status(500).json({
-            error: 'could not create channel'
+            error: 'Could not create channel'
         })
     }
 })

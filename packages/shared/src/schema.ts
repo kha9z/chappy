@@ -12,8 +12,8 @@ export const registerUserSchema = z.object({
     username: z.string()
         .trim()
         .min(3, 'Username must be atleast 3 characters')
-        .max(18, 'Username cannot exceed 20 characters')
-        .regex(/^[a-zA-Z0-9_]+$/, 'Ivalid letters'),
+        .max(26, 'Username cannot exceed 26 characters')
+        .regex(/^[a-zA-Z0-9_]+$/, 'Invalid letters'),
 
     password: z.string()
         .min(5, 'Password must be atleast 5 characters')
