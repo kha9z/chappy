@@ -25,5 +25,15 @@ export const loginUserSchema = z.object({
     password: z.string().min(1)
 })
 
+export const loginResponseSchema = z.object({
+    message: z.string(),
+    token: z.string().min(1),
+    user: z.object({
+        id: z.string().uuid(),
+        username: z.string().min(1)
+    })
+})
+
+export type LoginResponse = z.infer<typeof loginResponseSchema>
 export type RegisterUser = z.infer<typeof registerUserSchema>
 export type LoginUser = z.infer<typeof loginUserSchema>

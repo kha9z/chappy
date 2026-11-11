@@ -1,16 +1,9 @@
 import chappyLoginImg from '../assets/chappylogin.png'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { API_URL } from '../config/api'
+import { login, logout } from '../services/authService'
 import './LoginPage.css'
 
-type LoginResponse = {
-    token: string
-    user: {
-        id: string
-        username: string
-    }
-}
 
 export default function LoginPage() {
     const navigate = useNavigate()
@@ -19,44 +12,26 @@ export default function LoginPage() {
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
 
-    async function handleLogin(event: React.SubmitEvent<HTMLFormElement>) {
-        event.preventDefault()
-        setError('')
-        setIsLoading(true)
+async function handleLogin(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setError('')
+    setIsLoading(true)
 
-        try {
-            const response = await fetch(`${API_URL}/api/users/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username, 
-                    password
-                })
-            })
-            if (!response.ok) {
-                throw new Error('Invalid username or password')
-            }
+    try {
+        await login(username, password)
+        navigate('/channels', { replace: true })
 
-            const data: LoginResponse = await response.json()
+    } catch (error) {
+        setError('Login failed. Check your username or password.')
+        console.error(error)
 
-            localStorage.setItem('chappy_token', data.token)
-            localStorage.setItem('chappy_username', data.user.username)
-
-            navigate('/channels', { replace: true })
-
-        } catch (error) {
-            setError('Login failed. Check username or password')
-            console.error(error)
-
-        } finally {
-            setIsLoading(false)
-        }
+    } finally {
+        setIsLoading(false)
     }
+}
+
     function handleGuestLogin() {
-        localStorage.removeItem('chappy_token')
-        localStorage.removeItem('chappy_username')
+        logout()
         navigate('/channels')
     }
 
