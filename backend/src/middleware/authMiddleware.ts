@@ -1,7 +1,10 @@
 import type { RequestHandler } from 'express'
-import jwt, { type JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
-type AuthTokenPayLoad = JwtPayload & { username: string }
+type AuthTokenPayload = {
+    sub: string
+    username: string
+}
 
 export const authMiddleware: RequestHandler = (req, res, next) => {
     const authHeader = req.headers.authorization
@@ -35,10 +38,10 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
             return
         }
         
-        const user = decoded as AuthTokenPayLoad
+        const user = decoded as AuthTokenPayload
         res.locals.user = {
-            id: user.sub,
-            username: user.username
+            id: decoded.sub,
+            username: decoded.username
         }
         next()
 
