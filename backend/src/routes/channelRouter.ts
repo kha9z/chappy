@@ -20,9 +20,8 @@ try {
 
 } catch (error) {
 
-    console.error(error)
-    res.status(500).json({
-        error: 'Could not fetch channels'
+    console.error('DynamoDB error:', error)
+    res.status(500).json({ error: 'Could not fetch channels'
     })
 }
 })

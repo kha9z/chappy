@@ -34,6 +34,15 @@ export const loginResponseSchema = z.object({
     })
 })
 
+export const channelSchema = z.object({
+    PK: z.string(),
+    SK: z.string(),
+    name: z.string(),
+    description: z.string(),
+    isLocked: z.boolean()
+})
+
 export type LoginResponse = z.infer<typeof loginResponseSchema>
 export type RegisterUser = z.infer<typeof registerUserSchema>
 export type LoginUser = z.infer<typeof loginUserSchema>
+export type Channel = z.infer<typeof channelSchema>

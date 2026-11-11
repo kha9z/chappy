@@ -1,64 +1,23 @@
-import { useEffect, useState } from 'react'
-import { API_URL } from '../config/api'
-
-type Channel = {
-    PK: string
-    SK: string
-    name: string
-    description: string
-    isLocked: boolean
-}
+import { useLoaderData } from 'react-router-dom'
+import type { Channel } from '@chappy/shared'
+import { getToken, getUserName } from '../services/authService'
+import ChannelList from '../components/ChannelList'
 
 export default function ChannelsPage() {
-    const [channels, setChannels] = useState<Channel[]>([])
-    const [error, setError] = useState('')
-    const [isLoading, setIsLoading] = useState(true)
-    
-    const token = sessionStorage.getItem('chappy_token')
-    const username = sessionStorage.getItem('chappy_username')
-    
-    useEffect(() => {
-        async function fetchChannels() {
-            try {
-                const response = await fetch(`${API_URL}/api/channels`)
-                
-                if (!response.ok) {
-                    throw new Error('Could not load channels')
-                }
-                
-                const data: Channel[] = await response.json()
-                setChannels(data)
+    const channels = useLoaderData() as Channel[]
 
-            } catch (error) {
-                setError('Failed to load channels')
-                console.error(error)
-
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchChannels()
-    }, [])
+    const token = getToken()
+    const username = getUserName()
 
     return (
         <main>
             <h1>Channels</h1>
-            <p> {token ? `Logged in as ${username}` : 'Browsing as Guest'} </p>
 
-            {isLoading && <p>Loading channels..</p>}
-            {error && <p role="alert">{error}</p>}
+            <p>
+                {token ? `Logged in as ${username}` : 'Browsing as Guest'}
+            </p>
 
-            {channels
-                .filter((channel) => token || !channel.isLocked)
-                .map((channel) => (
-                    <article key={channel.PK}>
-                        <h2>{channel.name}</h2>
-                        <p>{channel.description}</p>
-                        <p>{channel.isLocked ? 'Locked' : 'Public'}</p>
-                    </article>
-                ))
-                }
+            <ChannelList channels={channels} />
         </main>
     )
 }
