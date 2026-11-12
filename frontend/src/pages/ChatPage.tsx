@@ -1,10 +1,10 @@
 import { Link, useLoaderData } from 'react-router-dom'
 import type { Channel } from '@chappy/shared'
-import { getToken } from '../services/authService'
+import { useAuthStore } from '../stores/authStore'
 
 export default function ChatPage() {
     const channel = useLoaderData() as Channel
-    const isLoggedIn = Boolean(getToken())
+    const isLoggedIn = useAuthStore((state) => Boolean(state.token))
     const canEnter = !channel.isLocked || isLoggedIn
 
     return ( 

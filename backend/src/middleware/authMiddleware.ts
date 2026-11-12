@@ -38,14 +38,13 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
             return
         }
         
-        const user = decoded as AuthTokenPayload
         res.locals.user = {
             id: decoded.sub,
             username: decoded.username
         }
         next()
 
-    } catch (error) {
+    } catch {
         res.status(401).json({
             error: 'Invalid or expired token'
         })

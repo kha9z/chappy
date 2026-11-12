@@ -1,13 +1,13 @@
 import { useLoaderData } from 'react-router-dom'
 import type { Channel } from '@chappy/shared'
-import { getToken, getUserName } from '../services/authService'
+import { useAuthStore } from '../stores/authStore'
 import ChannelList from '../components/ChannelList'
 
 export default function ChannelsPage() {
     const channels = useLoaderData() as Channel[]
 
-    const token = getToken()
-    const username = getUserName()
+    const token = useAuthStore((state) => state.token)
+    const username = useAuthStore((state) => state.username)
 
     return (
         <main>
