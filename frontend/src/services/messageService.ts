@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/authStore'
 
 export async function getMessages(channelId: string) {
     const token = useAuthStore.getState().token
-
+    
     const response = await fetch(
         `${API_URL}/api/channels/${encodeURIComponent(channelId)}/messages`,
         {
@@ -43,6 +43,7 @@ export async function sendMessage(channelId: string, content: string) {
     if (!response.ok) {
         throw new Error(`Could not send message (HTTP ${response.status})`)
     }
+
     const data: unknown = await response.json()
     return messageSchema.parse(data)
 }

@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react'
 import type { Message } from '@chappy/shared'
 import { getMessages, sendMessage } from '../services/messageService'
@@ -110,11 +109,7 @@ export function useMessages(
                         ) {
                             return previous
                         }
-
-                        return {
-                            ...previous,
-                            messages
-                        }
+                        return { ...previous, messages }
                     })
                 }
             } catch (error) {

@@ -10,7 +10,6 @@ export async function getChannels() {
     }
 
     const data: unknown = await response.json()
-
     return z.array(channelSchema).parse(data)
 }
 

@@ -3,11 +3,11 @@ import type { Channel } from '@chappy/shared'
 import { useAuthStore } from '../stores/authStore'
 import { useMessages } from '../hooks/useMessages'
 import MessageForm from '../components/MessageForm'
+import MessageList from '../components/MessageList'
 
 export default function ChatPage() {
     const channel = useLoaderData() as Channel
     const token = useAuthStore((state) => state.token)
-
     const isLoggedIn = Boolean(token)
     const canEnter = !channel.isLocked || isLoggedIn
     const channelId = channel.PK.replace(/^CHANNEL#/, '')
@@ -38,14 +38,7 @@ export default function ChatPage() {
                     ) : messages.length === 0 ? (
                         <p>No messages yet</p>
                     ) : (
-                        <ul>
-                            {messages.map((message) => (
-                                <li key={message.id}>
-                                    <strong>{message.username}: </strong>
-                                    {message.content}
-                                </li>
-                            ))}
-                        </ul>
+                        <MessageList messages={messages} />
                     )}
 
                     {error && messages.length > 0 && (

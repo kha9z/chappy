@@ -5,7 +5,6 @@ import ChannelList from '../components/ChannelList'
 
 export default function ChannelsPage() {
     const channels = useLoaderData() as Channel[]
-
     const token = useAuthStore((state) => state.token)
     const username = useAuthStore((state) => state.username)
 
