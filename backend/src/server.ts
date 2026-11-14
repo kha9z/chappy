@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import channelRouter from './routes/channelRouter.js'
 import userRouter from './routes/userRouter.js'
+import messageRouter from './routes/messageRouter.js'
 
 const app = express()
 const PORT = Number(process.env.PORT) || 6767
@@ -23,6 +24,7 @@ app.use(express.json())
 
 app.use('/api/channels', channelRouter)
 app.use('/api/users', userRouter)
+app.use('/api/channels', messageRouter)
 
 app.use(express.static(frontendPath))
 
