@@ -1,5 +1,7 @@
+
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import './MessageForm.css'
 
 type MessageFormProps = {
     onSend: (content: string) => Promise<boolean>
@@ -27,15 +29,17 @@ export default function MessageForm({
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="message">Your message</label>
+        <form className="message-form" onSubmit={handleSubmit}>
+            <label htmlFor="message" className="message-label">
+                Your message
+            </label>
 
             <input
                 id="message"
                 type="text"
                 placeholder="Write a message..."
                 value={content}
-                onChange={(event) => setContent(event.target.value)}
+                onChange={event => setContent(event.target.value)}
                 maxLength={2000}
                 disabled={isSending}
                 required

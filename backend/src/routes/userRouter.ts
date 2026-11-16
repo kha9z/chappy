@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { PutCommand, GetCommand } from '@aws-sdk/lib-dynamodb'
+import { PutCommand, GetCommand, ScanCommand } from '@aws-sdk/lib-dynamodb'
 import bcrypt from 'bcrypt'
 import { randomUUID } from 'node:crypto'
 import { registerUserSchema, loginUserSchema } from '@chappy/shared'
@@ -7,6 +7,60 @@ import { db, tableName } from '../db/dynamodb.js'
 import jwt from 'jsonwebtoken'
 
 const router = Router()
+
+router.get('/', async (req, res) => {
+    try {
+        const users: {
+            id: string
+            username: string
+        }[] = []
+
+        let lastEvaluatedKey: Record<string, unknown> | undefined
+
+        do {
+            const command = new ScanCommand({
+                TableName: tableName,
+                FilterExpression: 'begins_with(PK, :pk) AND SK = :sk',
+                ExpressionAttributeValues: {
+                    ':pk': 'USER#',
+                    ':sk': 'PROFILE'
+                },
+                ProjectionExpression: 'id, username',
+                ExclusiveStartKey: lastEvaluatedKey
+            })
+
+            const result = await db.send(command)
+
+            for (const item of result.Items ?? []) {
+                if (
+                    typeof item.id === 'string' &&
+                    typeof item.username === 'string'
+                ) {
+                    users.push({
+                        id: item.id,
+                        username: item.username
+                    })
+                }
+            }
+
+            lastEvaluatedKey = result.LastEvaluatedKey
+        } while (lastEvaluatedKey)
+
+        users.sort((a, b) =>
+            a.username.localeCompare(b.username)
+        )
+
+        res.json(users)
+
+    } catch (error) {
+        console.error('Could not fetch users:', error)
+
+        res.status(500).json({
+            error: 'Could not fetch users'
+        })
+    }
+})
+
 
 router.post('/register', async (req, res) => {
     try {
@@ -48,6 +102,7 @@ router.post('/register', async (req, res) => {
                 createdAt: user.createdAt
             }
         })
+        
     } catch (error) {
         if (
             error instanceof Error &&

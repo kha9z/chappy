@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import channelRouter from './routes/channelRouter.js'
 import userRouter from './routes/userRouter.js'
+import memberRouter from './routes/memberRouter.js'
 import messageRouter from './routes/messageRouter.js'
 
 const app = express()
@@ -25,6 +26,7 @@ app.use(express.json())
 app.use('/api/channels', channelRouter)
 app.use('/api/users', userRouter)
 app.use('/api/channels', messageRouter)
+app.use('/api/channels', memberRouter)
 
 app.use(express.static(frontendPath))
 

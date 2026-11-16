@@ -2,6 +2,8 @@ import { Router } from 'express'
 import { GetCommand, ScanCommand, PutCommand } from '@aws-sdk/lib-dynamodb'
 import { db, tableName } from '../db/dynamodb.js'
 import { createChannelSchema } from '@chappy/shared'
+import { authMiddleware } from '../middleware/authMiddleware.js'
+
 
 const router = Router()
 
@@ -52,13 +54,13 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
     try {
         const validation = createChannelSchema.safeParse(req.body)
 
         if (!validation.success) {
             res.status(400).json({
-                error: 'invalid channel data',
+                error: 'Invalid channel data',
                 details: validation.error.flatten()
             })
             return
@@ -72,7 +74,7 @@ router.post('/', async (req, res) => {
             name,
             description,
             isLocked,
-            createdBy: 'system',
+            createdBy: res.locals.user.id,
             createdAt: new Date().toISOString()
         }
 
@@ -91,14 +93,14 @@ router.post('/', async (req, res) => {
             error.name === 'ConditionalCheckFailedException'
         ) {
             res.status(409).json({
-                error: 'channel already exists'
+                error: 'Channel already exists'
             })
             return
-
         }
-        console.error(error)
+
+        console.error('Could not create channel:', error)
         res.status(500).json({
-            error: 'could not create channel'
+            error: 'Could not create channel'
         })
     }
 })

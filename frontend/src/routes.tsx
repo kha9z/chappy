@@ -1,10 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom'
+import { getChannel } from './services/channelService'
 import LoginPage from './pages/LoginPage'
 import ChannelsPage from './pages/ChannelsPage'
 import ChatPage from './pages/ChatPage'
 import ErrorPage from './pages/ErrorPage'
-import { getChannels, getChannel } from './services/channelService'
-
+import ChatLayout from './layouts/ChatLayout'
 
 const router = createBrowserRouter([
     {
@@ -14,20 +14,27 @@ const router = createBrowserRouter([
     },
     {
         path: '/channels',
-        element: <ChannelsPage />,
-        loader: getChannels,
-        errorElement: <ErrorPage />
-    },
-    {
-        path: '/channels/:id',
-        element: <ChatPage />,
-        loader: ({ params }) => {
-            if (!params.id) {
-                throw new Response('Channel ID missing', { status: 400 })
+        element: <ChatLayout />,
+        errorElement: <ErrorPage />,
+        children: [
+            {
+                index: true,
+                element: <ChannelsPage />,
+            },
+            {
+                path: ':id',
+                element: <ChatPage />,
+                loader: ({ params }) => {
+                    if (!params.id) {
+                        throw new Response('Channel ID missing', {
+                            status: 400
+                        })
+                    }
+
+                    return getChannel(params.id)
+                }
             }
-            return getChannel(params.id)
-        },
-        errorElement: <ErrorPage />
+        ]
     }
 ])
 

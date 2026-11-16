@@ -1,6 +1,7 @@
 
 import { useEffect, useRef } from 'react'
 import type { Message } from '@chappy/shared'
+import './MessageList.css'
 
 type MessageListProps = {
     messages: Message[]
@@ -8,7 +9,6 @@ type MessageListProps = {
 
 export default function MessageList({ messages }: MessageListProps) {
     const listRef = useRef<HTMLDivElement>(null)
-    const bottomRef = useRef<HTMLDivElement>(null)
     const shouldAutoScroll = useRef(true)
     const previousLastId = useRef<string | null>(null)
     const lastMessageId = messages.at(-1)?.id ?? null
@@ -22,22 +22,26 @@ export default function MessageList({ messages }: MessageListProps) {
 
         const distanceFromBottom =
             list.scrollHeight - list.scrollTop - list.clientHeight
+
         shouldAutoScroll.current = distanceFromBottom < 100
     }
 
     useEffect(() => {
-        if (!lastMessageId) {
-            previousLastId.current = null
+        const list = listRef.current
+
+        if (!list || !lastMessageId) {
+            previousLastId.current = lastMessageId
             return
         }
 
         if (previousLastId.current !== lastMessageId) {
             if (shouldAutoScroll.current) {
-                bottomRef.current?.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'end'
+                list.scrollTo({
+                    top: list.scrollHeight,
+                    behavior: previousLastId.current ? 'smooth' : 'instant'
                 })
             }
+
             previousLastId.current = lastMessageId
         }
     }, [lastMessageId])
@@ -47,13 +51,9 @@ export default function MessageList({ messages }: MessageListProps) {
             className="message-list"
             ref={listRef}
             onScroll={handleScroll}
-            style={{
-                height: '400px',
-                overflowY: 'auto'
-            }}
         >
             <ul>
-                {messages.map((message) => (
+                {messages.map(message => (
                     <li key={message.id}>
                         <strong>{message.username}</strong>
 
@@ -72,8 +72,6 @@ export default function MessageList({ messages }: MessageListProps) {
                     </li>
                 ))}
             </ul>
-
-            <div ref={bottomRef} />
         </div>
     )
 }

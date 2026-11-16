@@ -26,3 +26,20 @@ export async function login(username: string, password: string) {
 export function logout() {
     useAuthStore.getState().clearAuth()
 }
+
+export async function register(username: string, password: string) {
+    const response = await fetch(`${API_URL}/api/users/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    })
+
+    if (response.status === 409) {
+        throw new Error('Username already exists')
+    }
+    if (!response.ok) {
+        throw new Error('Could not create account')
+    }
+}

@@ -1,0 +1,252 @@
+.chappy-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 0;
+    background: #c6c6d8;
+    color: #171727;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 13px;
+    overflow: hidden;
+}
+
+.chappy-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    height: 32px;
+    padding: 0 8px;
+    background: #4800c8;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    border-bottom: 2px solid #280075;
+}
+
+.chappy-toolbar {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 6px;
+    min-height: 52px;
+    padding: 5px 10px;
+    background: #c6c6d8;
+    border-bottom: 2px solid;
+    border-bottom-color: #77778b;
+}
+
+.chappy-toolbar button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 5px 10px;
+    background: #c6c6d8;
+    color: #171727;
+    font-family: inherit;
+    font-size: 12px;
+    border: 2px solid;
+    border-color: #ffffff #77778b #77778b #ffffff;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.chappy-toolbar button:hover:not(:disabled) {
+    background: #d7d7e8;
+}
+
+.chappy-toolbar button:active:not(:disabled) {
+    border-color: #77778b #ffffff #ffffff #77778b;
+}
+
+.chappy-toolbar button:disabled {
+    color: #77778b;
+    cursor: not-allowed;
+}
+
+.chappy-workspace {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    padding: 5px;
+    gap: 5px;
+}
+
+.chappy-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 190px;
+    min-width: 0;
+    padding: 8px;
+    background: #dedeea;
+    border: 2px solid;
+    border-color: #77778b #ffffff #ffffff #77778b;
+    overflow-y: auto;
+}
+
+.sidebar-network {
+    font-weight: bold;
+    padding: 5px 0 10px;
+}
+
+.sidebar-group {
+    margin-bottom: 12px;
+}
+
+.sidebar-group-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.sidebar-group nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar-channel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px 4px 12px;
+    color: #171727;
+    text-decoration: none;
+    font-size: 12px;
+    border: 1px solid transparent;
+}
+
+.sidebar-channel:hover {
+    background: #d0c5f0;
+}
+
+.sidebar-channel.active {
+    background: #4800c8;
+    color: #ffffff;
+    border: 1px dotted #ffffff;
+}
+
+.chappy-main {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    background: #eeeeF5;
+    border: 2px solid;
+    border-color: #77778b #ffffff #ffffff #77778b;
+}
+
+.chat-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.chat-header {
+    flex-shrink: 0;
+    padding: 10px 12px;
+    background: #dedeea;
+    border-bottom: 1px solid #9999aa;
+}
+
+.chat-header h1 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.chat-header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+}
+
+.chat-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.chat-messages {
+   display: flex;
+   flex: 1;
+   flex-direction: column;
+   min-height: 0;
+   padding: 10px;
+   overflow: hidden;
+}
+
+.chat-input {
+    flex-shrink: 0;
+    padding: 8px;
+    background: #dedeea;
+    border-top: 2px solid #9999aa;
+}
+
+.channels-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.channels-welcome {
+    text-align: center;
+}
+
+.channels-welcome h1 {
+    font-size: 22px;
+    color: #4800c8;
+}
+
+.chappy-users {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 125px;
+    min-width: 0;
+    padding: 8px;
+    background: #dedeea;
+    border: 2px solid;
+    border-color: #77778b #ffffff #ffffff #77778b;
+    overflow-y: auto;
+}
+
+.users-header {
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #aaaabc;
+}
+
+.users-content {
+    padding-top: 8px;
+    font-size: 12px;
+}
+
+.users-content p {
+    margin: 0;
+    color: #666677;
+}
+
+.users-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.users-list li {
+    padding: 5px 3px;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.users-list li:hover {
+    background: #d0c5f0;
+}
+
+.user-name {
+    color: #171727;
+}
