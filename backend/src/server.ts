@@ -6,6 +6,7 @@ import channelRouter from './routes/channelRouter.js'
 import userRouter from './routes/userRouter.js'
 import memberRouter from './routes/memberRouter.js'
 import messageRouter from './routes/messageRouter.js'
+import aiRouter from './routes/aiRouter.js'
 
 const app = express()
 const PORT = Number(process.env.PORT) || 6767
@@ -27,6 +28,7 @@ app.use('/api/channels', channelRouter)
 app.use('/api/users', userRouter)
 app.use('/api/channels', messageRouter)
 app.use('/api/channels', memberRouter)
+app.use('/api/ai', aiRouter)
 
 app.use(express.static(frontendPath))
 
